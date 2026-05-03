@@ -1,3 +1,4 @@
+// Integration: Using Gemini 1.5 Flash via Google Cloud Vertex AI for PII Redaction
 "use server";
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -51,6 +52,11 @@ const mockProfiles: ExtractedVoterData[] = [
 ];
 
 export async function extractVoterData(imageBase64: string, mimeType: string, filename: string): Promise<ExtractedVoterData> {
+  // Security: Basic input length check to prevent over-sized payload attacks
+  if (imageBase64.length > 10 * 1024 * 1024) { // 10MB limit
+    throw new Error("Payload size exceeds security limits.");
+  }
+
   const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey) {

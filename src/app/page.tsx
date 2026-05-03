@@ -243,7 +243,11 @@ export default function Home() {
       <div className="fixed top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-blue-600/10 blur-[150px] rounded-full pointer-events-none" />
 
       {/* Global Voter Readiness Score */}
-      <div className="fixed top-6 right-6 z-50 bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-full pl-3 pr-5 py-2 flex items-center gap-3 shadow-2xl transition-all">
+      <div 
+        role="status" 
+        aria-label={`Current Voter Readiness Score: ${readinessScore}%`}
+        className="fixed top-6 right-6 z-50 bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-full pl-3 pr-5 py-2 flex items-center gap-3 shadow-2xl transition-all"
+      >
         <div className="w-10 h-10 rounded-full border-[3px] border-emerald-400 bg-emerald-500/10 flex items-center justify-center text-sm font-bold text-emerald-400">
           {readinessScore}%
         </div>
@@ -269,6 +273,10 @@ export default function Home() {
             </div>
 
             <div
+              role="button"
+              aria-label="Upload voter document image"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') fileInputRef.current?.click(); }}
               className={`relative rounded-3xl overflow-hidden transition-all duration-300 ease-out bg-white/5 backdrop-blur-xl border-2 border-dashed ${
                 isDragging ? "border-blue-400 bg-white/10 scale-[1.02]" : "border-slate-600/50 hover:border-slate-500"
               } ${isScanning ? "border-blue-500/80 shadow-[0_0_30px_rgba(59,130,246,0.3)]" : ""}`}
@@ -305,7 +313,7 @@ export default function Home() {
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={uploadedImage}
-                        alt="Uploaded"
+                        alt="Uploaded Voter Document for AI Analysis"
                         className={`w-full h-full object-cover transition-all duration-700 ${isScanning ? 'brightness-50 grayscale-[50%]' : 'brightness-100'}`}
                       />
                       
@@ -329,6 +337,7 @@ export default function Home() {
                       {!isScanning && (
                         <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-sm">
                            <button 
+                             aria-label="Upload a different voter document"
                              onClick={(e) => {
                                e.stopPropagation();
                                setUploadedImage(null);
@@ -441,7 +450,8 @@ export default function Home() {
                           <h3 className="text-3xl font-bold text-white">{voterData.name}</h3>
                         </div>
                         <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center text-white shadow-lg">
-                          <User size={28} />
+                          <User size={28} aria-hidden="true" />
+                          <span className="sr-only">Voter Icon</span>
                         </div>
                       </div>
 
@@ -573,6 +583,8 @@ export default function Home() {
                             <h4 className={`font-medium leading-none mt-2 ${hasViewedBallot ? 'text-slate-200' : 'text-slate-400'}`}>Polling Day Checklist</h4>
                             {!hasViewedBallot ? (
                               <button 
+                                role="button"
+                                aria-label="Open the ballot simulator to complete the checklist"
                                 onClick={() => setHasViewedBallot(true)}
                                 className="mt-3 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 text-white text-xs font-semibold rounded-lg shadow-lg hover:shadow-blue-500/25 transition-all flex items-center gap-2"
                               >
@@ -627,7 +639,7 @@ export default function Home() {
                       )}
                       <div className="flex gap-4 items-center mb-4">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={candidate.imageUrl} alt={candidate.name} className="w-16 h-16 rounded-full border-2 border-slate-700 bg-slate-800" />
+                        <img src={candidate.imageUrl} alt={`Portrait of candidate ${candidate.name}`} className="w-16 h-16 rounded-full border-2 border-slate-700 bg-slate-800" />
                         <div>
                           <h3 className="text-lg font-bold text-slate-100 leading-tight">{candidate.name}</h3>
                           <p className="text-sm text-slate-400">{candidate.party}</p>
@@ -728,6 +740,7 @@ export default function Home() {
               onKeyDown={(e) => e.key === 'Enter' && handleVerifyRumor()}
             />
             <button
+              aria-label="Scan rumor for truth verification"
               onClick={handleVerifyRumor}
               disabled={isVerifying || !rumorQuery.trim()}
               className="w-full sm:w-auto mt-2 sm:mt-0 px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-medium rounded-full shadow-lg hover:shadow-purple-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
